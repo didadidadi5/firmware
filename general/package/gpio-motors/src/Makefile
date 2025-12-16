@@ -1,3 +1,4 @@
 gpio-motors:
 	mkdir -p output
-	$(CC) $@.c -o output/$@ -s -Wall
+	$(CC) gpio_motors.c -o output/gpio_motors -s -Wall
+ $(CC) tcpsend.c -o output/tcpsend -s -Wall
