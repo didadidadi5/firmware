@@ -1,1 +1,4 @@
-
+config BR2_PACKAGE_TCPSEND
+	bool "tcpsend"
+	default y
+	
