@@ -12,7 +12,7 @@
 -
 +#define DEFAULT_LOG_FILE "/tmp/onvif.log"
 +#define DEBUG_FILE "/tmp/onvif.debug"
-#define ROTATION_LOG_LENGTH 3
+ #define ROTATION_LOG_LENGTH 3
 
  service_context_t service_ctx;
  
