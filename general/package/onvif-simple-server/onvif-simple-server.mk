@@ -33,7 +33,7 @@ define ONVIF_SIMPLE_SERVER_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -t $(TARGET_DIR)/var/www/onvif/ptz_service_files $(@D)/ptz_service_files/*
 	$(INSTALL) -m 0755 -d $(TARGET_DIR)/var/www/onvif/wsd_files
 	$(INSTALL) -m 0644 -t $(TARGET_DIR)/var/www/onvif/wsd_files $(@D)/wsd_files/*
-
+ ln -s /usr/sbin/onvif_simple_server $(TARGET_DIR)/var/www/onvif/deviceio_service
 	ln -s /usr/sbin/onvif_simple_server $(TARGET_DIR)/var/www/onvif/device_service
 	ln -s /usr/sbin/onvif_simple_server $(TARGET_DIR)/var/www/onvif/events_service
 	ln -s /usr/sbin/onvif_simple_server $(TARGET_DIR)/var/www/onvif/media_service
