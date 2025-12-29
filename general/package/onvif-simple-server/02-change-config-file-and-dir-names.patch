@@ -12,6 +12,7 @@
 +#define DEFAULT_LOG_FILE "/tmp/onvif.log"
 +#define DEBUG_FILE "/tmp/onvif.debug"
 #define ROTATION_LOG_LENGTH 3
+
  service_context_t service_ctx;
  
 --- a/wsd_simple_server.c	2023-07-16 16:48:12.000000000 +0300
