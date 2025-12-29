@@ -20,7 +20,7 @@
 -endif
 -endif
 +INCLUDE = -DHAVE_MBEDTLS -ffunction-sections -fdata-sections -lrt
-+LIBS_O = -Wl,--gc-sections -lmbedcrypto -ljson-c -lpthread -lrt
++LIBS_O = -Wl,--gc-sections -lmbedcrypto -lz -ljson-c -lpthread -lrt
 +LIBS_N = -Wl,--gc-sections -lmbedcrypto -ljson-c -lpthread -lrt
  LIBS_W = -Wl,--gc-sections
  
