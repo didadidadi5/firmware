@@ -1,6 +1,6 @@
 --- a/onvif_simple_server.c	2023-07-16 16:48:12.000000000 +0300
 +++ b/onvif_simple_server.c	2023-09-09 22:42:57.126222514 +0300
-@@ -38,11 +36,10 @@
+@@ -38,11 +38,10 @@
  #include "utils.h"
  #include "log.h"
 
