@@ -1,4 +1,4 @@
-name: build
+name: buildmain
 on:
   workflow_dispatch:
 
