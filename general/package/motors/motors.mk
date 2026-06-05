@@ -16,6 +16,7 @@ define MOTORS_BUILD_CMDS
 	(cd $(@D)/xm-kmotor; $(TARGET_CC) -Os -s main.c -o xm-kmotor)
 	(cd $(@D)/xm-uart; $(TARGET_CC) -Os -s main.c -o xm-uart)
 	(cd $(@D)/ingenic-motor; $(TARGET_CC) -Os -s main.c -o ingenic-motor)
+	(cd $(@D)/an41908; $(TARGET_CC) -Os -s main.c -o an41908)
 endef
 
 define MOTORS_INSTALL_TARGET_CMDS
@@ -24,6 +25,7 @@ define MOTORS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/xm-kmotor/xm-kmotor $(TARGET_DIR)/usr/bin/xm-kmotor
 	$(INSTALL) -m 0755 -D $(@D)/xm-uart/xm-uart $(TARGET_DIR)/usr/bin/xm-uart
 	$(INSTALL) -m 0755 -D $(@D)/ingenic-motor/ingenic-motor $(TARGET_DIR)/usr/bin/ingenic-motor
+	$(INSTALL) -m 0755 -D $(@D)/an41908/an41908 $(TARGET_DIR)/usr/bin/an41908
 endef
 
 $(eval $(generic-package))
