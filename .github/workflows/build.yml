@@ -196,14 +196,29 @@ jobs:
           TIME=$(date -d @${SECONDS} +%M:%S)
           echo TIME=${TIME} >> ${GITHUB_ENV}
 
-          NORFW=$(find output/images -name openipc*nor*)
+          NORFW=$(find output/images -name openipc*nor* -print -quit)
           if [ -e ${NORFW} ]; then
             echo NORFW=${NORFW} >> ${GITHUB_ENV}
           fi
 
-          NANDFW=$(find output/images -name openipc*nand*)
+          NANDFW=$(find output/images -name openipc*nand* -print -quit)
           if [ -e ${NANDFW} ]; then
             echo NANDFW=${NANDFW} >> ${GITHUB_ENV}
+          fi
+
+          UIMAGE=$(find output/images -type f -name 'uImage*' -print -quit || true)
+          if [ -n "${UIMAGE}" ] && [ -e "${UIMAGE}" ]; then
+            echo UIMAGE=${UIMAGE} >> ${GITHUB_ENV}
+          fi
+
+          ROOTFS_SQUASHFS=$(find output/images -type f -name 'rootfs.squashfs*' -print -quit || true)
+          if [ -n "${ROOTFS_SQUASHFS}" ] && [ -e "${ROOTFS_SQUASHFS}" ]; then
+            echo ROOTFS_SQUASHFS=${ROOTFS_SQUASHFS} >> ${GITHUB_ENV}
+          fi
+
+          ROOTFS_UBI=$(find output/images -type f -name 'rootfs.ubi*' -print -quit || true)
+          if [ -n "${ROOTFS_UBI}" ] && [ -e "${ROOTFS_UBI}" ]; then
+            echo ROOTFS_UBI=${ROOTFS_UBI} >> ${GITHUB_ENV}
           fi
 
       - name: Upload firmware
@@ -214,6 +229,21 @@ jobs:
           files: |
             ${{env.NORFW}}
             ${{env.NANDFW}}
+            ${{env.UIMAGE}}
+            ${{env.ROOTFS_SQUASHFS}}
+            ${{env.ROOTFS_UBI}}
+
+      - name: Upload rootfs and kernel artifacts
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-files-${{matrix.platform}}
+          path: |
+            ${{env.NORFW}}
+            ${{env.NANDFW}}
+            ${{env.UIMAGE}}
+            ${{env.ROOTFS_SQUASHFS}}
+            ${{env.ROOTFS_UBI}}
 
       - name: Send binary
         if: github.event_name != 'pull_request' && env.NORFW
