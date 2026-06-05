@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  TAG_NAME: testtcp1
+  TAG_NAME: testtcp12
 
 jobs:
   buildroot:
