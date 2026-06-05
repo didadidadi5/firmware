@@ -14,8 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          # Sigmastar [I6B]
-          - ssc335_lite
 
           # Hisilicon ultimate
           - hi3518ev200_ultimate
