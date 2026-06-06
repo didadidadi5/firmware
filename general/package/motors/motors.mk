@@ -11,6 +11,19 @@ MOTORS_LICENSE = MIT
 MOTORS_LICENSE_FILES = LICENSE
 
 define MOTORS_BUILD_CMDS
+	# helper: pick include dir for HiSilicon headers (try toolchain SDK, then staging, then target)
+	# Note: output/host/sdk/include is where CI/toolchain unpacks SDK headers
+	INCLUDE_FLAGS=""
+	if [ -f output/host/sdk/include/hi_type.h ]; then \
+		INCLUDE_FLAGS="-Ioutput/host/sdk/include"; \
+	elif [ -f "$(STAGING_DIR)/usr/include/hi_type.h" ]; then \
+		INCLUDE_FLAGS="-I$(STAGING_DIR)/usr/include"; \
+	elif [ -f "$(TARGET_DIR)/usr/include/hi_type.h" ]; then \
+		INCLUDE_FLAGS="-I$(TARGET_DIR)/usr/include"; \
+	fi; \
+	# Print chosen include path for debugging
+	echo "motors: USING_INCLUDE=$$INCLUDE_FLAGS" 1>&2
+
 	# build camhi-motor if present
 	if [ -d $(@D)/camhi-motor ]; then \
 		(cd $(@D)/camhi-motor && $(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -Os -s main.c -o camhi-motor $(TARGET_LDFLAGS) $(TARGET_LDLIBS)); \
@@ -35,20 +48,20 @@ define MOTORS_BUILD_CMDS
 	if [ -d $(@D)/an41908 ]; then \
 		(cd $(@D)/an41908 && \
 			if [ -f main.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			elif [ -f an41908.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			elif [ -f an41908a.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			fi); \
 	elif [ -d $(@D)/an41908a ]; then \
 		(cd $(@D)/an41908a && \
 			if [ -f main.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			elif [ -f an41908a.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			elif [ -f an41908.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/include -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lm -lpthread; \
+				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			fi); \
 	fi
 endef
