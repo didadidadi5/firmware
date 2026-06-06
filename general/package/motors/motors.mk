@@ -14,8 +14,8 @@ define MOTORS_BUILD_CMDS
 	# helper: pick include dir for HiSilicon headers (try toolchain SDK, then staging, then target)
 	# Note: output/host/sdk/include is where CI/toolchain unpacks SDK headers
 	INCLUDE_FLAGS=""
-	if [ -f "/home/runner/work/firmware/firmware/output/per-package/motors/host/sdk/include/hi_type.h" ]; then \
-		INCLUDE_FLAGS="-I/home/runner/work/firmware/firmware/output/per-package/motors/host/sdk/include"; \
+	if [ -f "/home/runner/work/firmware/firmware/output/host/sdk/include/hi_type.h" ]; then \
+		INCLUDE_FLAGS="-I/home/runner/work/firmware/firmware/output/host/sdk/include"; \
 	elif [ -f "$(STAGING_DIR)/usr/include/hi_type.h" ]; then \
 		INCLUDE_FLAGS="-I$(STAGING_DIR)/usr/include"; \
 	elif [ -f "$(TARGET_DIR)/usr/include/hi_type.h" ]; then \
@@ -47,23 +47,14 @@ define MOTORS_BUILD_CMDS
 	# build AN41908 variant (support both an41908 and an41908a directories and several source names)
 	if [ -d $(@D)/an41908 ]; then \
 		(cd $(@D)/an41908 && \
-			if [ -f main.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			elif [ -f an41908.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			elif [ -f an41908a.c ]; then \
+			if [ -f an41908a.c ]; then \
 				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 			fi); \
 	elif [ -d $(@D)/an41908a ]; then \
 		(cd $(@D)/an41908a && \
-			if [ -f main.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s main.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			elif [ -f an41908a.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			elif [ -f an41908.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			fi); \
-	fi
+	  if [ -f an41908a.c ]; then \
+			$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
+	  fi
 endef
 
 define MOTORS_INSTALL_TARGET_CMDS
