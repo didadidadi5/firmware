@@ -55,6 +55,7 @@ define MOTORS_BUILD_CMDS
 	  if [ -f an41908a.c ]; then \
 			$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
 	  fi;\
+ fi;\
 endef
 
 define MOTORS_INSTALL_TARGET_CMDS
