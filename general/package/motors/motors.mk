@@ -14,8 +14,8 @@ define MOTORS_BUILD_CMDS
 	# helper: pick include dir for HiSilicon headers (try toolchain SDK, then staging, then target)
 	# Note: output/host/sdk/include is where CI/toolchain unpacks SDK headers
 	INCLUDE_FLAGS=""
-	if [ -f output/host/sdk/include/hi_type.h ]; then \
-		INCLUDE_FLAGS="-Ioutput/host/sdk/include"; \
+	if [ -f /home/runner/work/firmware/firmware/output/per-package/dropbear-openipc/host/sdk/include/hi_type.h ]; then \
+		INCLUDE_FLAGS="-I/home/runner/work/firmware/firmware/output/per-package/dropbear-openipc/host/sdk/include""; \
 	elif [ -f "$(STAGING_DIR)/usr/include/hi_type.h" ]; then \
 		INCLUDE_FLAGS="-I$(STAGING_DIR)/usr/include"; \
 	elif [ -f "$(TARGET_DIR)/usr/include/hi_type.h" ]; then \
