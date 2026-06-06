@@ -41,6 +41,32 @@ jobs:
           path: /tmp/ccache
           key: ${{matrix.platform}}-${{env.CACHE_DATE}}
 
+      - name: Debug: locate toolchain & hi_type
+        run: |
+          set -eux
+          echo "PWD=$(pwd)"
+          echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE:-$(pwd)}"
+          echo "Listing common locations..."
+          find output -type f -name 'hi_type.h' -print || true
+          find output -type d -name 'sdk' -print || true
+          ls -la output/host || true
+          find ../per-package -path '*/host/sdk/include' -print -exec ls -la {} \; || true
+          find output/per-package -path '*/host/sdk/include' -print -exec ls -la {} \; || true
+          find output -type f -name '*-gcc' -executable -print || true
+          readlink -f output/per-package/*/host/bin/*-gcc 2>/dev/null || true
+          ls -la output/staging/usr/include || true
+          ls -la output/host/sdk/include || true
+
+      - name: Upload toolchain debug artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolchain-debug-${{ matrix.platform }}
+          path: |
+            output/host/sdk
+            output/per-package
+            output/staging/usr/include
+            output/build/motors-HEAD
+
       - name: Build firmware
         run: |
           export GIT_HASH=$(git rev-parse --short ${GITHUB_SHA})
