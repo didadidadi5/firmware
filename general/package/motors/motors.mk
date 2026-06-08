@@ -11,20 +11,7 @@ MOTORS_LICENSE = MIT
 MOTORS_LICENSE_FILES = LICENSE
 
 define MOTORS_BUILD_CMDS
-	# helper: pick include dir for HiSilicon headers (try toolchain SDK, then staging, then target)
-	# Note: output/host/sdk/include is where CI/toolchain unpacks SDK headers
-	INCLUDE_FLAGS=""; \
-	if [ -f "/home/runner/work/firmware/firmware/output/host/sdk/include/hi_type.h" ]; then \
-		INCLUDE_FLAGS="-I/home/runner/work/firmware/firmware/output/host/sdk/include"; \
-	elif [ -f "$(STAGING_DIR)/usr/include/hi_type.h" ]; then \
-		INCLUDE_FLAGS="-I$(STAGING_DIR)/usr/include"; \
-	elif [ -f "$(TARGET_DIR)/usr/include/hi_type.h" ]; then \
-		INCLUDE_FLAGS="-I$(TARGET_DIR)/usr/include"; \
-	fi; \
-	# Print chosen include path for debugging
-	echo "motors: USING_INCLUDE=$$INCLUDE_FLAGS" 1>&2
-
-	# build camhi-motor if present
+# build camhi-motor if present
 	if [ -d $(@D)/camhi-motor ]; then \
 		(cd $(@D)/camhi-motor && $(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -Os -s main.c -o camhi-motor $(TARGET_LDFLAGS) $(TARGET_LDLIBS)); \
 	fi
@@ -44,19 +31,6 @@ define MOTORS_BUILD_CMDS
 	if [ -d $(@D)/ingenic-motor ]; then \
 		(cd $(@D)/ingenic-motor && $(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -Os -s main.c -o ingenic-motor $(TARGET_LDFLAGS) $(TARGET_LDLIBS)); \
 	fi
-	# build AN41908 variant (support both an41908 and an41908a directories and several source names)
-	if [ -d $(@D)/an41908 ]; then \
-		(cd $(@D)/an41908 && \
-			if [ -f an41908a.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			fi); \
-	elif [ -d $(@D)/an41908a ]; then \
-		(cd $(@D)/an41908a && \
-			if [ -f an41908a.c ]; then \
-				$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $$INCLUDE_FLAGS -Os -s an41908a.c -o an41908 $(TARGET_LDFLAGS) $(TARGET_LDLIBS) -lpthread -lm; \
-			fi); \
-	fi; \
-endef
 
 define MOTORS_INSTALL_TARGET_CMDS
 	if [ -f $(@D)/camhi-motor/camhi-motor ]; then \
@@ -74,12 +48,6 @@ define MOTORS_INSTALL_TARGET_CMDS
 	if [ -f $(@D)/ingenic-motor/ingenic-motor ]; then \
 		$(INSTALL) -m 0755 -D $(@D)/ingenic-motor/ingenic-motor $(TARGET_DIR)/usr/bin/ingenic-motor; \
 	fi
-	# install AN41908 if built in any of the supported dirs
-	if [ -f $(@D)/an41908/an41908 ]; then \
-		$(INSTALL) -m 0755 -D $(@D)/an41908/an41908 $(TARGET_DIR)/usr/bin/an41908; \
-	elif [ -f $(@D)/an41908a/an41908 ]; then \
-		$(INSTALL) -m 0755 -D $(@D)/an41908a/an41908 $(TARGET_DIR)/usr/bin/an41908; \
-	fi
-endef
+
 
 $(eval $(generic-package))
