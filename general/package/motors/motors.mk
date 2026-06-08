@@ -31,6 +31,7 @@ define MOTORS_BUILD_CMDS
 	if [ -d $(@D)/ingenic-motor ]; then \
 		(cd $(@D)/ingenic-motor && $(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -Os -s main.c -o ingenic-motor $(TARGET_LDFLAGS) $(TARGET_LDLIBS)); \
 	fi
+endef
 
 define MOTORS_INSTALL_TARGET_CMDS
 	if [ -f $(@D)/camhi-motor/camhi-motor ]; then \
@@ -48,6 +49,6 @@ define MOTORS_INSTALL_TARGET_CMDS
 	if [ -f $(@D)/ingenic-motor/ingenic-motor ]; then \
 		$(INSTALL) -m 0755 -D $(@D)/ingenic-motor/ingenic-motor $(TARGET_DIR)/usr/bin/ingenic-motor; \
 	fi
-
+endef
 
 $(eval $(generic-package))
